@@ -10,11 +10,25 @@ type TodolistProps = {
   todolist: TodolistType;
 };
 
+export type todolistStatsType = {
+  totalCount: number;
+  isDoneCount: number;
+  inProgressCount: number;
+  percentsOfComplete: number;
+};
+
 export const Todolist = ({ todolist }: TodolistProps) => {
   const tasks = useAppSelector(state => state.tasks[todolist.id]);
   const dispatch = useAppDispatch();
-
   const [isOpen, setIsOpen] = useState(false);
+
+  const isDoneCount = tasks?.filter(task => task.isDone).length;
+  const todolistStats = {
+    totalCount: tasks?.length,
+    isDoneCount: isDoneCount,
+    inProgressCount: tasks?.length - isDoneCount,
+    percentsOfComplete: Math.floor((isDoneCount / tasks?.length) * 100),
+  };
 
   useEffect(() => {
     dispatch(getTasksForTodolistThunk(todolist.id));
@@ -22,7 +36,7 @@ export const Todolist = ({ todolist }: TodolistProps) => {
 
   return (
     <article className={s.todolist}>
-      <TodolistTitle title={todolist.title} isOpen={isOpen} setIsOpen={setIsOpen} />
+      <TodolistTitle title={todolist.title} isOpen={isOpen} setIsOpen={setIsOpen} todolistStats={todolistStats} />
       {isOpen && <TodolistTasks tasks={tasks} todolistId={todolist.id} />}
     </article>
   );

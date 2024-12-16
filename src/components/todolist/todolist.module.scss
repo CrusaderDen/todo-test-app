@@ -1,15 +1,19 @@
-.title {
+.todolist {
+  margin-bottom: 50px;
+}
+
+.titleButton {
   cursor: pointer;
 
   position: relative;
 
 
   display: flex;
-  gap: 20px;
-  align-items: center;
+  flex-direction: column;
 
-  width: 200px;
-  padding: 0 40px;
+  width: 400px;
+  margin-bottom: 20px;
+  padding: 10px 20px;
 
   border: 1px solid white;
 
@@ -31,4 +35,25 @@
       background-color: #5b5959;
     }
   }
+}
+
+.titleHeader {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+
+.green {
+  color: green;
+}
+
+.red {
+  color: red;
 }
