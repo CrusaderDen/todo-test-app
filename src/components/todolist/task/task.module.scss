@@ -1,0 +1,40 @@
+button {
+  all: unset;
+}
+
+.task {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.checkboxRoot {
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 20px;
+  height: 20px;
+
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px #1e3ec1;
+
+  &:hover {
+    background-color: #dadada;
+  }
+}
+
+.checkboxIndicator {
+  width: 10px;
+  height: 10px;
+  background-color: green;
+  border-radius: 50%;
+}
+
+.label {
+  cursor: pointer;
+  user-select: none;
+}
