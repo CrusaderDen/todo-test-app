@@ -11,7 +11,7 @@ import { useProgressBar } from '@/utils/useProgressBar';
 nProgress.configure({ showSpinner: false, trickle: false });
 
 function App() {
-  const todolists = useAppSelector(state => state.todolists);
+  const todolists = useAppSelector(state => state.todolists.todolists);
   const loading = useAppSelector(state => state.app.loading);
   const error = useAppSelector(state => state.app.error);
 

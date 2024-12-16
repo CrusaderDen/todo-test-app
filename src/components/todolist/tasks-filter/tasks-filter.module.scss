@@ -1,0 +1,13 @@
+.filterButton {
+  padding: 5px 15px;
+  transition: background-color 0.2s;
+
+
+  &:hover {
+    background-color: rgba(100, 108, 255, 30%);
+  }
+}
+
+.activeButton {
+  background-color: #646cff;
+}

@@ -1,18 +1,30 @@
 import s from './todolist-tasks.module.scss';
-import { Task } from '@/components/todolist/task/task';
-import { TaskType } from '@/backend/db.types';
+import { Task } from '@/components/todolist/todolist-tasks/task/task';
+import { TaskType, TodolistType } from '@/backend/db.types';
+import { TasksFilter } from '@/components/todolist/tasks-filter/tasks-filter';
 
 type Tasks = {
   tasks: TaskType[];
-  todolistId: number;
+  todolist: TodolistType;
 };
 
-export const TodolistTasks = ({ tasks, todolistId }: Tasks) => {
+export const TodolistTasks = ({ tasks, todolist }: Tasks) => {
+  const filter = todolist.filterVariant;
+  let filteredTasks = tasks;
+  if (filter === 'active') {
+    filteredTasks = tasks.filter(task => !task.isDone);
+  } else if (filter === 'completed') {
+    filteredTasks = tasks.filter(task => task.isDone);
+  }
+
   return (
-    <div className={s.tasksContainer}>
-      {tasks.map(task => (
-        <Task key={task.id} task={task} todolistId={todolistId} />
-      ))}
+    <div className={s.wrapper}>
+      <TasksFilter todolist={todolist} className={s.tasksFilter} />
+      <div className={s.tasks}>
+        {filteredTasks.map(task => (
+          <Task key={task.id} task={task} todolistId={todolist.id} />
+        ))}
+      </div>
     </div>
   );
 };

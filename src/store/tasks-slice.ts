@@ -18,7 +18,7 @@ export const tasksSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addCase(getTasksForTodolistThunk.fulfilled, (state, action) => {
+    builder.addCase(getTasksForTodolistThunk.fulfilled, (state, action: any) => {
       const todolistId = action.meta.arg;
       state[todolistId] = action.payload as TaskType[];
     });

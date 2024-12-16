@@ -1,10 +1,12 @@
 import s from './todolist.module.scss';
 import { TodolistTasks } from '@/components/todolist/todolist-tasks/todolist-tasks';
 import { TodolistTitle } from '@/components/todolist/todolist-title/todolist-title';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { getTasksForTodolistThunk } from '@/store/thunks';
 import { TodolistType } from '@/backend/db.types';
+import clsx from 'clsx';
+import arrow from './../../assets/icons8-arrow-100.png';
 
 type TodolistProps = {
   todolist: TodolistType;
@@ -19,8 +21,10 @@ export type todolistStatsType = {
 
 export const Todolist = ({ todolist }: TodolistProps) => {
   const tasks = useAppSelector(state => state.tasks[todolist.id]);
+  const activeTodolistId = useAppSelector(state => state.todolists.activeTodolistId);
+
   const dispatch = useAppDispatch();
-  const [isOpen, setIsOpen] = useState(false);
+  const isOpen = activeTodolistId === todolist.id;
 
   const isDoneCount = tasks?.filter(task => task.isDone).length;
   const todolistStats = {
@@ -36,8 +40,13 @@ export const Todolist = ({ todolist }: TodolistProps) => {
 
   return (
     <article className={s.todolist}>
-      <TodolistTitle title={todolist.title} isOpen={isOpen} setIsOpen={setIsOpen} todolistStats={todolistStats} />
-      {isOpen && <TodolistTasks tasks={tasks} todolistId={todolist.id} />}
+      <TodolistTitle todolist={todolist} stats={todolistStats} className={clsx(s.todolistTitle, isOpen && s.todolistActive)} />
+      {isOpen && (
+        <>
+          <img src={arrow} alt="arrow" className={s.arrow} />
+          <TodolistTasks tasks={tasks} todolist={todolist} />
+        </>
+      )}
     </article>
   );
 };

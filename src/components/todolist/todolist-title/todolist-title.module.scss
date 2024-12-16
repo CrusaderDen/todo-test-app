@@ -1,0 +1,22 @@
+.titleHeader {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+.green {
+  color: green;
+}
+
+.red {
+  color: red;
+}

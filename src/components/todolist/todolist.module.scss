@@ -1,8 +1,10 @@
+
 .todolist {
-  margin-bottom: 50px;
+  position: relative;
+  margin-bottom: 20px;
 }
 
-.titleButton {
+.todolistTitle {
   cursor: pointer;
 
   position: relative;
@@ -32,28 +34,19 @@
       height: 100%;
 
       opacity: 0.5;
-      background-color: #5b5959;
+      background-color: rgba(91, 89, 89, 45%);
     }
   }
 }
 
-.titleHeader {
-  display: flex;
-  gap: 20px;
-  align-items: center;
+.todolistActive {
+  background-color: rgb(34, 34, 34);
 }
 
-.stats {
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-}
+.arrow {
+  position: absolute;
+  top: 50%;
+  left: 450px;
+  transform: translateY(-50%);
 
-
-.green {
-  color: green;
-}
-
-.red {
-  color: red;
 }
