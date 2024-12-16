@@ -1,18 +1,11 @@
 import s from './todolist-tasks.module.scss';
 import { Task } from '@/components/todolist/task/task';
-import { useAppSelector } from '@/store/hooks';
+import { TaskType } from '@/store/tasks-slice';
 
-type TasksSection = {
-  tasksId: number;
+type Tasks = {
+  tasks: TaskType[];
 };
 
-export const TodolistTasks = ({ tasksId }: TasksSection) => {
-  const tasks = useAppSelector(state => state.tasks[tasksId]);
-  return (
-    <div className={s.tasksContainer}>
-      {tasks.map(task => (
-        <Task key={task.id} label={task.label} />
-      ))}
-    </div>
-  );
+export const TodolistTasks = ({ tasks }: Tasks) => {
+  return <div className={s.tasksContainer}>{tasks?.map(task => <Task key={task.id} label={task.label} />)}</div>;
 };
