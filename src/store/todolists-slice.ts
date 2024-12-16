@@ -1,10 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getTodolistsThunk } from '@/store/thunks';
-
-export type TodolistType = {
-  id: number;
-  title: string;
-};
+import { TodolistType } from '@/backend/db.types';
 
 const initialState: TodolistType[] = [];
 
