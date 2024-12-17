@@ -48,10 +48,6 @@ button {
   border-radius: 50%;
 }
 
-.taskLabel {
-  cursor: pointer;
-  user-select: none;
-}
 
 .iconContainer {
   display: flex;
@@ -68,25 +64,4 @@ button {
 
 }
 
-.taskIsDone {
-  text-decoration: line-through;
-}
 
-.taskInput {
-  width: 90%;
-  padding-block: 0;
-  padding-inline: 0;
-
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.5;
-  color: rgba(255, 255, 255, 87%);
-
-  background-color: transparent;
-  border: none;
-
-  &:focus {
-    outline: none;
-  }
-}

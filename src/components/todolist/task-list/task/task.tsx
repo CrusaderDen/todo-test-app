@@ -1,12 +1,15 @@
 import s from './task.module.scss';
 import * as Checkbox from '@radix-ui/react-checkbox';
-import { ChangeEvent, useId, useState } from 'react';
+import { useId, useState } from 'react';
 import clsx from 'clsx';
 import { useAppDispatch } from '@/store/hooks';
-import { changeTaskStatus, editTask, removeTask } from '@/store/tasks-slice';
+import { changeTaskStatus, removeTask } from '@/store/tasks-slice';
 import { TaskType } from '@/backend/db.types';
 import basketIcon from '@/assets/trash-svgrepo-com.svg';
 import penIcon from '@/assets/pen-new-square-svgrepo-com.svg';
+import { TaskActionButton } from '@/components/todolist/task-list/task/task-action-button/task-action-button';
+import { TaskLabel } from '@/components/todolist/task-list/task/task-label/task-label';
+import { TaskLabelEditor } from '@/components/todolist/task-list/task/task-label-editor/task-label-editor';
 
 type TaskProps = {
   todolistId: number;
@@ -15,8 +18,9 @@ type TaskProps = {
 
 export const Task = ({ todolistId, task }: TaskProps) => {
   const { id: taskId, label, isDone } = task;
-  const id = useId();
+  const checkboxId = useId();
   const dispatch = useAppDispatch();
+
   const [editMode, setEditMode] = useState(false);
   const [inputText, setInputText] = useState(label);
 
@@ -32,53 +36,31 @@ export const Task = ({ todolistId, task }: TaskProps) => {
     setEditMode(!editMode);
   };
 
-  const noEditMode = (
-    <label className={clsx(s.taskLabel, isDone && s.taskIsDone)} htmlFor={id}>
-      {label}
-    </label>
-  );
-
-  const onBlurInputHandler = () => {
-    dispatch(editTask({ todolistId, taskId: task.id, text: inputText }));
-    setEditMode(false);
-  };
-  const onChangeInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setInputText(e.target.value);
-  };
-  const onKeyDownInputHandler = (e: KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      dispatch(editTask({ todolistId, taskId: task.id, text: inputText }));
-      setEditMode(false);
-    }
+  const taskInputProps = {
+    setEditMode,
+    setInputText,
+    todolistId,
+    taskId,
+    inputText,
   };
 
-  const isEditMode = (
-    <input
-      className={s.taskInput}
-      type="text"
-      value={inputText}
-      autoFocus
-      onBlur={() => onBlurInputHandler()}
-      onChange={e => onChangeInputHandler(e)}
-      onKeyDown={e => onKeyDownInputHandler(e)}
-    />
-  );
+  const taskLabelProps = {
+    checkboxId,
+    label,
+    isDone,
+  };
 
   return (
     <div className={clsx(s.container, editMode && s.editContainer)}>
       <div className={s.task}>
-        <Checkbox.Root className={s.checkboxRoot} id={id} checked={isDone} onClick={taskStatusHandler}>
+        <Checkbox.Root className={s.checkboxRoot} id={checkboxId} checked={isDone} onClick={taskStatusHandler}>
           <Checkbox.Indicator className={s.checkboxIndicator} />
         </Checkbox.Root>
-        {!editMode ? noEditMode : isEditMode}
+        {editMode ? <TaskLabelEditor {...taskInputProps} /> : <TaskLabel {...taskLabelProps} />}
       </div>
       <div className={s.iconContainer}>
-        <button onClick={taskRemoveHandler}>
-          <img src={basketIcon} alt="basket" />
-        </button>
-        <button onClick={taskEditHandler} disabled={task.isDone}>
-          <img src={penIcon} alt="pen" />
-        </button>
+        <TaskActionButton onClick={taskRemoveHandler} icon={basketIcon} />
+        <TaskActionButton onClick={taskEditHandler} icon={penIcon} />
       </div>
     </div>
   );

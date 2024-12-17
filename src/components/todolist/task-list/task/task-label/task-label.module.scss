@@ -1,0 +1,8 @@
+.taskLabel {
+  cursor: pointer;
+  user-select: none;
+}
+
+.taskIsDone {
+  text-decoration: line-through;
+}
