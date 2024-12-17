@@ -1,6 +1,8 @@
 
 .todolist {
   position: relative;
+  display: flex;
+  justify-content: flex-start;
   margin-bottom: 20px;
 }
 
@@ -57,7 +59,7 @@
 .todolistTasks {
   position: absolute;
   z-index: 20;
-  top: -39px;
+  top: -10px;
   left: 560px;
   transform: translateX(-20px);
 

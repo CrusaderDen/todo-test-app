@@ -23,7 +23,7 @@ function App() {
   useProgressBar(loading, error);
 
   return (
-    <div>
+    <div style={{ display: 'inline-block' }}>
       {todolists.map(todolist => (
         <Todolist key={todolist.id} todolist={todolist} />
       ))}

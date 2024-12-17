@@ -1,0 +1,34 @@
+.container {
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.addTaskInput {
+  width: 590px;
+  height: 50px;
+  padding-left: 15px;
+  font-size: 16px;
+
+  &::placeholder {
+    color: #8e8c8c;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.addTaskButton {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+
+  height: 30px;
+
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: scale(1.2) translateY(-40%);
+  }
+}

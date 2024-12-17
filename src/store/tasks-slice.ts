@@ -29,6 +29,11 @@ export const tasksSlice = createSlice({
         task.label = action.payload.text;
       }
     },
+    addTask: (state, action: PayloadAction<{ todolistId: number; text: string }>) => {
+      const taskId = Date.now();
+      const newTaskModel = { id: taskId, label: action.payload.text, isDone: false };
+      state[action.payload.todolistId].unshift(newTaskModel);
+    },
   },
   extraReducers: builder => {
     builder.addCase(getTasksForTodolistThunk.fulfilled, (state, action: any) => {
@@ -38,5 +43,5 @@ export const tasksSlice = createSlice({
   },
 });
 
-export const { changeTaskStatus, removeTask, editTask } = tasksSlice.actions;
+export const { changeTaskStatus, removeTask, editTask, addTask } = tasksSlice.actions;
 export default tasksSlice.reducer;
