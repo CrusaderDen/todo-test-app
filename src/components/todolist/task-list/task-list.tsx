@@ -1,14 +1,15 @@
-import s from './todolist-tasks.module.scss';
-import { Task } from '@/components/todolist/todolist-tasks/task/task';
+import s from './task-list.module.scss';
+import { Task } from '@/components/todolist/task-list/task/task';
 import { TaskType, TodolistType } from '@/backend/db.types';
-import { TasksFilter } from '@/components/todolist/tasks-filter/tasks-filter';
+import { TaskFilters } from '@/components/todolist/task-filters/task-filters';
 
 type Tasks = {
   tasks: TaskType[];
   todolist: TodolistType;
+  className: string;
 };
 
-export const TodolistTasks = ({ tasks, todolist }: Tasks) => {
+export const TaskList = ({ tasks, todolist, className }: Tasks) => {
   const filter = todolist.filterVariant;
   let filteredTasks = tasks;
   if (filter === 'active') {
@@ -18,8 +19,8 @@ export const TodolistTasks = ({ tasks, todolist }: Tasks) => {
   }
 
   return (
-    <div className={s.wrapper}>
-      <TasksFilter todolist={todolist} className={s.tasksFilter} />
+    <div className={className}>
+      <TaskFilters todolist={todolist} className={s.tasksFilter} />
       <div className={s.tasks}>
         {filteredTasks.map(task => (
           <Task key={task.id} task={task} todolistId={todolist.id} />

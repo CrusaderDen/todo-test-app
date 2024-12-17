@@ -1,4 +1,4 @@
-import s from './tasks-filter.module.scss';
+import s from './task-filters.module.scss';
 import { useAppDispatch } from '@/store/hooks';
 import { setFilter } from '@/store/todolists-slice';
 import { FilterVariantType, TodolistType } from '@/backend/db.types';
@@ -10,7 +10,7 @@ type TasksFilter = {
   className: string;
 };
 
-export const TasksFilter = ({ todolist, className }: TasksFilter) => {
+export const TaskFilters = ({ todolist, className }: TasksFilter) => {
   return (
     <div className={className}>
       <FilterButton filterVariant={'all'} todolist={todolist}>

@@ -1,4 +1,4 @@
-import s from './todolist-title.module.scss';
+import s from './todolist-general.module.scss';
 
 import { todolistStatsType } from '@/components/todolist/todolist';
 import { TodolistType } from '@/backend/db.types';
@@ -11,7 +11,7 @@ type TodolistTitleProps = {
   className: string;
 };
 
-export const TodolistTitle = ({ todolist, stats, className }: TodolistTitleProps) => {
+export const TodolistGeneral = ({ todolist, stats, className }: TodolistTitleProps) => {
   const dispatch = useAppDispatch();
   const activeTodolistId = useAppSelector(state => state.todolists.activeTodolistId);
 
