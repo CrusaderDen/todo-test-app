@@ -1,8 +1,8 @@
 import React, { ChangeEvent, useState } from 'react';
 import { useAppDispatch } from '@/store/hooks';
-import { addTask } from '@/store/tasks-slice';
 import s from './task-creator.module.scss';
 import plusIcon from '@/assets/plus-circle-svgrepo-com.svg';
+import { createTaskForTodolistThunk } from '@/store/thunks';
 
 export const TaskCreator = ({ todolistId }: { todolistId: number }) => {
   const [newTaskLabel, setNewTaskLabel] = useState('');
@@ -11,14 +11,14 @@ export const TaskCreator = ({ todolistId }: { todolistId: number }) => {
 
   const onClickHandler = () => {
     if (newTaskLabel.trim() !== '') {
-      dispatch(addTask({ todolistId, text: newTaskLabel }));
+      dispatch(createTaskForTodolistThunk({ todolistId, text: newTaskLabel }));
       setNewTaskLabel('');
     }
   };
 
   const onKeyDownInputHandler = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      dispatch(addTask({ todolistId, text: newTaskLabel }));
+      dispatch(createTaskForTodolistThunk({ todolistId, text: newTaskLabel }));
       setNewTaskLabel('');
     }
   };

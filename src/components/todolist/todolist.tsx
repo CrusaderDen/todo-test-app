@@ -28,10 +28,10 @@ export const Todolist = ({ todolist }: TodolistProps) => {
 
   const isDoneCount = tasks?.filter(task => task.isDone).length;
   const todolistStats = {
-    totalCount: tasks?.length,
-    isDoneCount: isDoneCount,
-    inProgressCount: tasks?.length - isDoneCount,
-    percentsOfComplete: Math.floor((isDoneCount / tasks?.length) * 100),
+    totalCount: tasks?.length || 0,
+    isDoneCount: isDoneCount || 0,
+    inProgressCount: tasks?.length - isDoneCount || 0,
+    percentsOfComplete: Math.floor((isDoneCount / tasks?.length) * 100) || 0,
   };
 
   useEffect(() => {

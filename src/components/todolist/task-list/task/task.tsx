@@ -3,7 +3,6 @@ import * as Checkbox from '@radix-ui/react-checkbox';
 import { useId, useState } from 'react';
 import clsx from 'clsx';
 import { useAppDispatch } from '@/store/hooks';
-import { changeTaskStatus, removeTask } from '@/store/tasks-slice';
 import { TaskType } from '@/backend/db.types';
 import basketIcon from '@/assets/trash-svgrepo-com.svg';
 import penIcon from '@/assets/pen-new-square-svgrepo-com.svg';
@@ -11,6 +10,8 @@ import { TaskActionButton } from '@/components/todolist/task-list/task/task-acti
 import { TaskLabel } from '@/components/todolist/task-list/task/task-label/task-label';
 import { TaskLabelEditor } from '@/components/todolist/task-list/task/task-label-editor/task-label-editor';
 import { DialogModal } from '@/components/dialog-modal/dialog-modal';
+import { deleteTaskForTodolistThunk } from '@/store/thunks';
+import { changeTaskStatus } from '@/store/tasks-slice';
 
 type TaskProps = {
   todolistId: number;
@@ -35,7 +36,7 @@ export const Task = ({ todolistId, task }: TaskProps) => {
   };
 
   const modalConfirmHandler = () => {
-    dispatch(removeTask({ todolistId, taskId }));
+    dispatch(deleteTaskForTodolistThunk({ todolistId, taskId }));
   };
 
   const taskEditHandler = () => {

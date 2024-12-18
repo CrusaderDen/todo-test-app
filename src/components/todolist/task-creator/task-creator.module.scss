@@ -1,6 +1,7 @@
 .container {
   position: relative;
   margin-bottom: 10px;
+
 }
 
 .addTaskInput {
@@ -8,6 +9,8 @@
   height: 50px;
   padding-left: 15px;
   font-size: 16px;
+
+  //background-color: rgb(118, 118, 118);
 
   &::placeholder {
     color: #8e8c8c;
