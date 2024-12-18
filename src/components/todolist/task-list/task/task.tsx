@@ -10,6 +10,7 @@ import penIcon from '@/assets/pen-new-square-svgrepo-com.svg';
 import { TaskActionButton } from '@/components/todolist/task-list/task/task-action-button/task-action-button';
 import { TaskLabel } from '@/components/todolist/task-list/task/task-label/task-label';
 import { TaskLabelEditor } from '@/components/todolist/task-list/task/task-label-editor/task-label-editor';
+import { DialogModal } from '@/components/dialog-modal/dialog-modal';
 
 type TaskProps = {
   todolistId: number;
@@ -23,12 +24,17 @@ export const Task = ({ todolistId, task }: TaskProps) => {
 
   const [editMode, setEditMode] = useState(false);
   const [inputText, setInputText] = useState(label);
+  const [showModal, setShowModal] = useState(false);
 
   const taskStatusHandler = () => {
     dispatch(changeTaskStatus({ todolistId, taskId }));
   };
 
   const taskRemoveHandler = () => {
+    setShowModal(true);
+  };
+
+  const modalConfirmHandler = () => {
     dispatch(removeTask({ todolistId, taskId }));
   };
 
@@ -59,9 +65,17 @@ export const Task = ({ todolistId, task }: TaskProps) => {
         {editMode ? <TaskLabelEditor {...taskInputProps} /> : <TaskLabel {...taskLabelProps} />}
       </div>
       <div className={s.iconContainer}>
-        <TaskActionButton onClick={taskRemoveHandler} icon={basketIcon} />
-        <TaskActionButton onClick={taskEditHandler} icon={penIcon} />
+        {!editMode && <TaskActionButton onClick={taskRemoveHandler} icon={basketIcon} />}
+        {!editMode && <TaskActionButton onClick={taskEditHandler} icon={penIcon} />}
       </div>
+      <DialogModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        description={'Удалить задачу?'}
+        confirmButtonText={'Да'}
+        rejectButtonText={'Нет'}
+        onConfirm={modalConfirmHandler}
+      />
     </div>
   );
 };
