@@ -40,14 +40,14 @@ export const createTask_endpoint = ({ todolistId, text }: CreateTaskEndpointsArg
 
 export const updateTask_endpoint = ({
   todolistId,
-  taskId,
-  text,
+  updatedTask,
 }: UpdateTaskEndpointsArgs): Promise<{ status: number; updatedTask?: TaskType }> => {
   return new Promise(resolve => {
     setTimeout(() => {
-      const task = tasks[todolistId].find(task => task.id === taskId);
+      console.log(todolistId);
+      // const task = tasks[todolistId].find(task => task.id === id);
+      const task = true;
       if (task) {
-        const updatedTask = { ...task, label: text };
         resolve({ status: 204, updatedTask });
       } else {
         resolve({ status: 404 });

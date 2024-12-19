@@ -10,8 +10,7 @@ import { TaskActionButton } from '@/components/todolist/task-list/task/task-acti
 import { TaskLabel } from '@/components/todolist/task-list/task/task-label/task-label';
 import { TaskLabelEditor } from '@/components/todolist/task-list/task/task-label-editor/task-label-editor';
 import { DialogModal } from '@/components/dialog-modal/dialog-modal';
-import { deleteTaskForTodolistThunk } from '@/store/thunks';
-import { changeTaskStatus } from '@/store/tasks-slice';
+import { deleteTaskForTodolistThunk, updateTaskForTodolistThunk } from '@/store/thunks';
 
 type TaskProps = {
   todolistId: number;
@@ -28,7 +27,7 @@ export const Task = ({ todolistId, task }: TaskProps) => {
   const [showModal, setShowModal] = useState(false);
 
   const taskStatusHandler = () => {
-    dispatch(changeTaskStatus({ todolistId, taskId }));
+    dispatch(updateTaskForTodolistThunk({ todolistId, updatedTask: { ...task, isDone: !task.isDone } }));
   };
 
   const taskRemoveHandler = () => {
@@ -47,7 +46,7 @@ export const Task = ({ todolistId, task }: TaskProps) => {
     setEditMode,
     setInputText,
     todolistId,
-    taskId,
+    task,
     inputText,
   };
 

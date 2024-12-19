@@ -2,19 +2,20 @@ import { useAppDispatch } from '@/store/hooks';
 import React, { ChangeEvent } from 'react';
 import s from './task-label-editor.module.scss';
 import { updateTaskForTodolistThunk } from '@/store/thunks';
+import { TaskType } from '@/backend/db.types';
 
 type TaskLabelEditorProps = {
   setEditMode: (newEditMode: boolean) => void;
   setInputText: (newText: string) => void;
   todolistId: number;
-  taskId: number;
+  task: TaskType;
   inputText: string;
 };
-export const TaskLabelEditor = ({ setEditMode, setInputText, todolistId, taskId, inputText }: TaskLabelEditorProps) => {
+export const TaskLabelEditor = ({ setEditMode, setInputText, todolistId, task, inputText }: TaskLabelEditorProps) => {
   const dispatch = useAppDispatch();
 
   const onBlurInputHandler = () => {
-    dispatch(updateTaskForTodolistThunk({ todolistId, taskId, text: inputText }));
+    dispatch(updateTaskForTodolistThunk({ todolistId, updatedTask: { ...task, label: inputText } }));
     setEditMode(false);
   };
   const onChangeInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -22,7 +23,7 @@ export const TaskLabelEditor = ({ setEditMode, setInputText, todolistId, taskId,
   };
   const onKeyDownInputHandler = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      dispatch(updateTaskForTodolistThunk({ todolistId, taskId, text: inputText }));
+      dispatch(updateTaskForTodolistThunk({ todolistId, updatedTask: { ...task, label: inputText } }));
       setEditMode(false);
     }
   };

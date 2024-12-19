@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import {
   createTaskForTodolistThunk,
   deleteTaskForTodolistThunk,
@@ -12,16 +12,7 @@ const initialState: Tasks = {};
 export const tasksSlice = createSlice({
   name: 'tasks',
   initialState,
-  reducers: {
-    changeTaskStatus: (state, action: PayloadAction<{ todolistId: number; taskId: number }>) => {
-      const todolistId = action.payload.todolistId;
-      const taskId = action.payload.taskId;
-      const task = state[todolistId].find(task => task.id === taskId);
-      if (task) {
-        task.isDone = !task.isDone;
-      }
-    },
-  },
+  reducers: {},
   extraReducers: builder => {
     builder.addCase(getTasksForTodolistThunk.fulfilled, (state, action: any) => {
       const todolistId = action.meta.arg;
@@ -32,10 +23,10 @@ export const tasksSlice = createSlice({
       state[todolistId].unshift(action.payload);
     });
     builder.addCase(updateTaskForTodolistThunk.fulfilled, (state, action: any) => {
-      const { todolistId, taskId } = action.meta.arg;
-      const taskIndex = state[todolistId].findIndex(task => task.id === taskId);
+      const { todolistId } = action.meta.arg;
+      const taskIndex = state[todolistId].findIndex(task => task.id === action.payload.id);
       if (taskIndex !== -1) {
-        state[todolistId][taskIndex] = action.payload;
+        state[todolistId][taskIndex] = { ...action.payload };
       }
     });
     builder.addCase(deleteTaskForTodolistThunk.fulfilled, (state, action: any) => {
@@ -45,5 +36,4 @@ export const tasksSlice = createSlice({
   },
 });
 
-export const { changeTaskStatus } = tasksSlice.actions;
 export default tasksSlice.reducer;

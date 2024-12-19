@@ -1,3 +1,5 @@
+import { TaskType } from '@/backend/db.types';
+
 export type CreateTaskEndpointsArgs = {
   todolistId: number;
   text: string;
@@ -5,8 +7,7 @@ export type CreateTaskEndpointsArgs = {
 
 export type UpdateTaskEndpointsArgs = {
   todolistId: number;
-  taskId: number;
-  text: string;
+  updatedTask: TaskType;
 };
 
 export type DeleteTaskEndpointsArgs = {
