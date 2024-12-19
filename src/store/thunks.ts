@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AppDispatch, RootState } from '@/store/store';
 import { api } from '@/api/api';
 import { setAppError, setAppLoading } from '@/store/app-slice';
-import { TaskType, TodolistType } from '@/backend/db.types';
+import { TodolistType } from '@/backend/db.types';
 import { CreateTaskEndpointsArgs, DeleteTaskEndpointsArgs, UpdateTaskEndpointsArgs } from '@/backend/endpoints.types';
 
 const createAppAsyncThunk = createAsyncThunk.withTypes<{
@@ -27,10 +27,11 @@ export const getTasksForTodolistThunk = createAppAsyncThunk('tasks/getTasksForTo
   dispatch(setAppLoading(true));
   try {
     const response = await api.getTasksForTodolist(todolistId);
-    return response as TaskType[];
+    return response.tasksForTodolist;
   } catch (error) {
     const errorMessage = (error as Error).message || 'Failed to load tasks';
     dispatch(setAppError(errorMessage));
+    throw error;
   } finally {
     dispatch(setAppLoading(false));
   }
@@ -42,14 +43,11 @@ export const createTaskForTodolistThunk = createAppAsyncThunk(
     dispatch(setAppLoading(true));
     try {
       const response = await api.createTaskForTodolist({ todolistId, text });
-      if (response.status === 204) {
-        return response.newTask as TaskType;
-      } else if (response.status === 404) {
-        return Promise.reject(new Error('Failed to create task. Please, try again later.'));
-      }
+      return response.newTask;
     } catch (error) {
       const errorMessage = (error as Error).message || 'Failed to create task';
       dispatch(setAppError(errorMessage));
+      throw error;
     } finally {
       dispatch(setAppLoading(false));
     }
@@ -62,14 +60,11 @@ export const updateTaskForTodolistThunk = createAppAsyncThunk(
     dispatch(setAppLoading(true));
     try {
       const response = await api.updateTaskForTodolist({ todolistId, updatedTask });
-      if (response.status === 204) {
-        return response.updatedTask as TaskType;
-      } else if (response.status === 404) {
-        return Promise.reject(new Error('Task not found.'));
-      }
+      return response.updatedTask;
     } catch (error) {
       const errorMessage = (error as Error).message || 'Failed to update task';
       dispatch(setAppError(errorMessage));
+      throw error;
     } finally {
       dispatch(setAppLoading(false));
     }
@@ -81,15 +76,12 @@ export const deleteTaskForTodolistThunk = createAppAsyncThunk(
   async ({ todolistId, taskId }: DeleteTaskEndpointsArgs, { dispatch }) => {
     dispatch(setAppLoading(true));
     try {
-      const response = await api.deleteTaskForTodolist({ todolistId, taskId });
-      if (response.status === 204) {
-        return { todolistId, taskId };
-      } else if (response.status === 404) {
-        return Promise.reject(new Error('Task not found.'));
-      }
+      await api.deleteTaskForTodolist({ todolistId, taskId });
+      return { todolistId, taskId };
     } catch (error) {
       const errorMessage = (error as Error).message || 'Failed to delete task';
       dispatch(setAppError(errorMessage));
+      throw error;
     } finally {
       dispatch(setAppLoading(false));
     }

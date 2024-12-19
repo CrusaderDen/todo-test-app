@@ -22,6 +22,10 @@ function App() {
 
   useProgressBar(loading, error);
 
+  if (error) {
+    alert(error);
+  }
+
   return (
     <div style={{ display: 'inline-block' }}>
       {todolists.map(todolist => (

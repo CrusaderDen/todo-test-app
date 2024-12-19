@@ -14,25 +14,29 @@ export const getTodolists_endpoint = () => {
 
 //task endpoints
 
-export const getTasks_endpoint = (todolistId: number) => {
-  return new Promise(resolve => {
+export const getTasks_endpoint = (todolistId: number): Promise<{ status: number; tasksForTodolist: TaskType[] }> => {
+  return new Promise((resolve, reject) => {
     setTimeout(() => {
       const tasksForTodolist = tasks[todolistId];
-      resolve(tasksForTodolist);
+      if (tasksForTodolist) {
+        resolve({ status: 204, tasksForTodolist });
+      } else {
+        reject({ status: 404, message: `Failed to retrieve task for todolist with ID: ${todolistId}` });
+      }
     }, getRandomDelay(300));
   });
 };
 
 export const createTask_endpoint = ({ todolistId, text }: CreateTaskEndpointsArgs): Promise<{ status: number; newTask?: TaskType }> => {
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     setTimeout(() => {
       const taskId = Date.now();
+      const dataReceived = !!todolistId && !!text;
       const newTaskModel = { id: taskId, label: text, isDone: false };
-      tasks[todolistId] = [newTaskModel, ...tasks[todolistId]];
-      if (newTaskModel) {
+      if (dataReceived) {
         resolve({ status: 204, newTask: newTaskModel });
       } else {
-        resolve({ status: 404 });
+        reject({ status: 404, message: 'Failed to create task. Please, try again later.' });
       }
     }, getRandomDelay(100));
   });
@@ -41,27 +45,28 @@ export const createTask_endpoint = ({ todolistId, text }: CreateTaskEndpointsArg
 export const updateTask_endpoint = ({
   todolistId,
   updatedTask,
-}: UpdateTaskEndpointsArgs): Promise<{ status: number; updatedTask?: TaskType }> => {
-  return new Promise(resolve => {
+}: UpdateTaskEndpointsArgs): Promise<{ status: number; updatedTask: TaskType }> => {
+  return new Promise((resolve, reject) => {
     setTimeout(() => {
-      console.log(todolistId);
-      // const task = tasks[todolistId].find(task => task.id === id);
-      const task = true;
-      if (task) {
+      const taskFound = !!todolistId && !!updatedTask;
+      if (taskFound) {
         resolve({ status: 204, updatedTask });
       } else {
-        resolve({ status: 404 });
+        reject({ status: 404, message: 'Task not found.' });
       }
     }, getRandomDelay(100));
   });
 };
 
 export const deleteTask_endpoint = ({ todolistId, taskId }: DeleteTaskEndpointsArgs): Promise<{ status: number }> => {
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     setTimeout(() => {
-      tasks[todolistId] = tasks[todolistId].filter(task => task.id !== taskId);
-      // resolve(tasks[todolistId]);
-      resolve({ status: 204 });
+      const taskFound = !!todolistId && !!taskId;
+      if (taskFound) {
+        resolve({ status: 204 });
+      } else {
+        reject({ status: 404, message: 'Task not found.' });
+      }
     }, getRandomDelay(100));
   });
 };
