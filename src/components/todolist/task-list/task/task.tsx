@@ -48,6 +48,7 @@ export const Task = ({ todolistId, task }: TaskProps) => {
     todolistId,
     task,
     inputText,
+    label,
   };
 
   const taskLabelProps = {

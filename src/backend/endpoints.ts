@@ -32,11 +32,19 @@ export const createTask_endpoint = ({ todolistId, text }: CreateTaskEndpointsArg
     setTimeout(() => {
       const taskId = Date.now();
       const dataReceived = !!todolistId && !!text;
+
+      let isError = null;
+      if (text.length > 100) {
+        isError = 'Too long message.';
+      } else if (!dataReceived) {
+        isError = 'Failed to create task. Please, try again later.';
+      }
+
       const newTaskModel = { id: taskId, label: text, isDone: false };
-      if (dataReceived) {
+      if (!isError) {
         resolve({ status: 204, newTask: newTaskModel });
       } else {
-        reject({ status: 404, message: 'Failed to create task. Please, try again later.' });
+        reject({ status: 404, message: isError });
       }
     }, getRandomDelay(100));
   });
@@ -49,10 +57,18 @@ export const updateTask_endpoint = ({
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       const taskFound = !!todolistId && !!updatedTask;
-      if (taskFound) {
+
+      let isError = null;
+      if (updatedTask.label.length > 100) {
+        isError = 'Too long message.';
+      } else if (!taskFound) {
+        isError = 'Task not found.';
+      }
+
+      if (!isError) {
         resolve({ status: 204, updatedTask });
       } else {
-        reject({ status: 404, message: 'Task not found.' });
+        reject({ status: 404, message: isError });
       }
     }, getRandomDelay(100));
   });
