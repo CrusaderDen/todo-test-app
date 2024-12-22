@@ -1,9 +1,9 @@
-import { useAppDispatch } from '@/store/hooks';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import React, { ChangeEvent, useEffect, useRef } from 'react';
 import s from './task-label-editor.module.scss';
 import { updateTaskForTodolistThunk } from '@/store/thunks';
 import { TaskType } from '@/backend/db.types';
-import * as Tooltip from '@radix-ui/react-tooltip';
+import { setTaskEditError } from '@/store/app-slice';
 
 type TaskLabelEditorProps = {
   setEditMode: (newEditMode: boolean) => void;
@@ -15,16 +15,13 @@ type TaskLabelEditorProps = {
 };
 export const TaskLabelEditor = ({ setEditMode, setInputText, todolistId, task, inputText, label }: TaskLabelEditorProps) => {
   const dispatch = useAppDispatch();
-  const [errorTip, setErrorTip] = useState('');
-  const [open, setOpen] = useState(false);
+  const errorTip = useAppSelector(state => state.app.taskEditError);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const updateTask = () => {
-    if (inputText.length <= 100) {
-      dispatch(updateTaskForTodolistThunk({ todolistId, updatedTask: { ...task, label: inputText } }));
-      setEditMode(false);
-    } else {
-      setErrorTip('Превышен максимальный размер (допускается не более 100 символов)');
-    }
+    if (errorTip) return;
+    dispatch(updateTaskForTodolistThunk({ todolistId, updatedTask: { ...task, label: inputText } }));
+    setEditMode(false);
   };
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
@@ -36,39 +33,39 @@ export const TaskLabelEditor = ({ setEditMode, setInputText, todolistId, task, i
   };
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInputText(e.target.value);
+    if (e.target.value.length > 20) {
+      dispatch(setTaskEditError('Превышен максимальный размер (допускается не более 100 символов)'));
+    } else {
+      dispatch(setTaskEditError(null));
+    }
+  };
+
+  const handleOnBlur = () => {
+    if (errorTip && inputRef.current) {
+      inputRef.current.focus();
+    }
+    updateTask();
   };
 
   useEffect(() => {
-    if (errorTip) {
-      setOpen(true);
-    } else {
-      setOpen(false);
-    }
-  }, [errorTip]);
+    return () => {
+      dispatch(setTaskEditError(null));
+    };
+  }, [dispatch]);
 
   return (
-    <>
-      <Tooltip.Provider>
-        <Tooltip.Root open={open} onOpenChange={setOpen}>
-          <Tooltip.Trigger asChild>
-            <input
-              className={s.editField}
-              type="text"
-              value={inputText}
-              autoFocus
-              onBlur={() => updateTask()}
-              onChange={e => handleChange(e)}
-              onKeyDown={e => handleKeyDown(e)}
-            />
-          </Tooltip.Trigger>
-          <Tooltip.Portal>
-            <Tooltip.Content className={s.tipContent}>
-              {errorTip}
-              <Tooltip.Arrow />
-            </Tooltip.Content>
-          </Tooltip.Portal>
-        </Tooltip.Root>
-      </Tooltip.Provider>
-    </>
+    <div className={s.container} style={{ paddingLeft: '20px' }}>
+      <input
+        ref={inputRef}
+        className={s.editField}
+        type="text"
+        value={inputText}
+        autoFocus
+        onBlur={() => handleOnBlur()}
+        onChange={e => handleChange(e)}
+        onKeyDown={e => handleKeyDown(e)}
+      />
+      {errorTip && <div className={s.errorTip}>{errorTip}</div>}
+    </div>
   );
 };

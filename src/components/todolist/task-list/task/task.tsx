@@ -2,7 +2,7 @@ import s from './task.module.scss';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import { useId, useState } from 'react';
 import clsx from 'clsx';
-import { useAppDispatch } from '@/store/hooks';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { TaskType } from '@/backend/db.types';
 import basketIcon from '@/assets/trash-svgrepo-com.svg';
 import penIcon from '@/assets/pen-new-square-svgrepo-com.svg';
@@ -19,6 +19,7 @@ type TaskProps = {
 
 export const Task = ({ todolistId, task }: TaskProps) => {
   const { id: taskId, label, isDone } = task;
+  const errorTip = !!useAppSelector(state => state.app.taskEditError);
   const checkboxId = useId();
   const dispatch = useAppDispatch();
 
@@ -58,7 +59,7 @@ export const Task = ({ todolistId, task }: TaskProps) => {
   };
 
   return (
-    <div className={clsx(s.container, editMode && s.editContainer)}>
+    <div className={clsx(s.container, editMode && s.editContainer, errorTip && s.disabled)}>
       <div className={s.task}>
         <Checkbox.Root className={s.checkboxRoot} id={checkboxId} checked={isDone} onClick={taskStatusHandler}>
           <Checkbox.Indicator className={s.checkboxIndicator} />

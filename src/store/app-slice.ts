@@ -3,11 +3,13 @@ import { createSlice } from '@reduxjs/toolkit';
 type AppState = {
   loading: boolean;
   error: string | null;
+  taskEditError: string | null;
 };
 
 const initialState: AppState = {
   loading: false,
   error: null,
+  taskEditError: null,
 };
 
 export const appSlice = createSlice({
@@ -20,8 +22,11 @@ export const appSlice = createSlice({
     setAppError: (state, action) => {
       state.error = action.payload;
     },
+    setTaskEditError: (state, action) => {
+      state.taskEditError = action.payload;
+    },
   },
 });
 
-export const { setAppLoading, setAppError } = appSlice.actions;
+export const { setAppLoading, setAppError, setTaskEditError } = appSlice.actions;
 export default appSlice.reducer;
