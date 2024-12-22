@@ -19,7 +19,7 @@ type TaskProps = {
 
 export const Task = ({ todolistId, task }: TaskProps) => {
   const { id: taskId, label, isDone } = task;
-  const errorTip = !!useAppSelector(state => state.app.taskEditError);
+  const errorTaskId = useAppSelector(state => state.app.taskEditError.taskId);
   const checkboxId = useId();
   const dispatch = useAppDispatch();
 
@@ -58,8 +58,10 @@ export const Task = ({ todolistId, task }: TaskProps) => {
     isDone,
   };
 
+  const disabledCondition = errorTaskId !== null && errorTaskId !== taskId;
+
   return (
-    <div className={clsx(s.container, editMode && s.editContainer, errorTip && s.disabled)}>
+    <div className={clsx(s.container, editMode && s.editContainer, disabledCondition && s.disabled)}>
       <div className={s.task}>
         <Checkbox.Root className={s.checkboxRoot} id={checkboxId} checked={isDone} onClick={taskStatusHandler}>
           <Checkbox.Indicator className={s.checkboxIndicator} />

@@ -4,6 +4,7 @@ import s from './task-label-editor.module.scss';
 import { updateTaskForTodolistThunk } from '@/store/thunks';
 import { TaskType } from '@/backend/db.types';
 import { setTaskEditError } from '@/store/app-slice';
+import { ErrorTip } from '@/components/todolist/error-tip/error-tip';
 
 type TaskLabelEditorProps = {
   setEditMode: (newEditMode: boolean) => void;
@@ -15,57 +16,64 @@ type TaskLabelEditorProps = {
 };
 export const TaskLabelEditor = ({ setEditMode, setInputText, todolistId, task, inputText, label }: TaskLabelEditorProps) => {
   const dispatch = useAppDispatch();
-  const errorTip = useAppSelector(state => state.app.taskEditError);
+  const errorTipMessage = useAppSelector(state => state.app.taskEditError.errorMessage);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const updateTask = () => {
-    if (errorTip) return;
-    dispatch(updateTaskForTodolistThunk({ todolistId, updatedTask: { ...task, label: inputText } }));
+  const resetInput = () => {
+    setInputText(label);
     setEditMode(false);
+  };
+
+  const updateTask = () => {
+    if (!errorTipMessage) {
+      dispatch(updateTaskForTodolistThunk({ todolistId, updatedTask: { ...task, label: inputText } }));
+      setEditMode(false);
+    }
   };
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       updateTask();
     } else if (e.key === 'Escape') {
-      setInputText(label);
-      setEditMode(false);
+      resetInput();
     }
   };
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setInputText(e.target.value);
-    if (e.target.value.length > 20) {
-      dispatch(setTaskEditError('Превышен максимальный размер (допускается не более 100 символов)'));
+    const newValue = e.target.value;
+    setInputText(newValue);
+    if (newValue.length > 20) {
+      dispatch(setTaskEditError({ taskId: task.id, errorMessage: 'Превышен максимальный размер (допускается не более 100 символов)' }));
     } else {
-      dispatch(setTaskEditError(null));
+      dispatch(setTaskEditError({ taskId: null, errorMessage: null }));
     }
   };
 
   const handleOnBlur = () => {
-    if (errorTip && inputRef.current) {
-      inputRef.current.focus();
+    if (errorTipMessage) {
+      inputRef.current?.focus();
     }
     updateTask();
   };
 
   useEffect(() => {
     return () => {
-      dispatch(setTaskEditError(null));
+      dispatch(setTaskEditError({ taskId: null, errorMessage: null }));
     };
   }, [dispatch]);
 
   return (
-    <div className={s.container} style={{ paddingLeft: '20px' }}>
+    <div className={s.container}>
       <input
         ref={inputRef}
         className={s.editField}
         type="text"
         value={inputText}
         autoFocus
+        spellCheck={false}
         onBlur={() => handleOnBlur()}
         onChange={e => handleChange(e)}
         onKeyDown={e => handleKeyDown(e)}
       />
-      {errorTip && <div className={s.errorTip}>{errorTip}</div>}
+      {errorTipMessage && <ErrorTip message={errorTipMessage} />}
     </div>
   );
 };

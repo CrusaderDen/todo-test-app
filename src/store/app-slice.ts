@@ -3,13 +3,19 @@ import { createSlice } from '@reduxjs/toolkit';
 type AppState = {
   loading: boolean;
   error: string | null;
-  taskEditError: string | null;
+  taskEditError: {
+    taskId: number | null;
+    errorMessage: string | null;
+  };
 };
 
 const initialState: AppState = {
   loading: false,
   error: null,
-  taskEditError: null,
+  taskEditError: {
+    taskId: null,
+    errorMessage: null,
+  },
 };
 
 export const appSlice = createSlice({
