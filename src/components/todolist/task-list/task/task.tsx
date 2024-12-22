@@ -19,7 +19,7 @@ type TaskProps = {
 
 export const Task = ({ todolistId, task }: TaskProps) => {
   const { id: taskId, label, isDone } = task;
-  const errorTaskId = useAppSelector(state => state.app.taskEditError.taskId);
+  const errorTaskId = useAppSelector(state => state.app.taskEdit_ValidationError.taskId);
   const checkboxId = useId();
   const dispatch = useAppDispatch();
 

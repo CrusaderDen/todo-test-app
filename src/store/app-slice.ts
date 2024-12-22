@@ -2,8 +2,9 @@ import { createSlice } from '@reduxjs/toolkit';
 
 type AppState = {
   loading: boolean;
-  error: string | null;
-  taskEditError: {
+  commonError: string | null;
+  taskCreate_validationError: string | null;
+  taskEdit_ValidationError: {
     taskId: number | null;
     errorMessage: string | null;
   };
@@ -11,8 +12,9 @@ type AppState = {
 
 const initialState: AppState = {
   loading: false,
-  error: null,
-  taskEditError: {
+  commonError: null,
+  taskCreate_validationError: null,
+  taskEdit_ValidationError: {
     taskId: null,
     errorMessage: null,
   },
@@ -26,13 +28,16 @@ export const appSlice = createSlice({
       state.loading = action.payload;
     },
     setAppError: (state, action) => {
-      state.error = action.payload;
+      state.commonError = action.payload;
     },
     setTaskEditError: (state, action) => {
-      state.taskEditError = action.payload;
+      state.taskEdit_ValidationError = action.payload;
+    },
+    setTaskCreateError: (state, action) => {
+      state.taskCreate_validationError = action.payload;
     },
   },
 });
 
-export const { setAppLoading, setAppError, setTaskEditError } = appSlice.actions;
+export const { setAppLoading, setAppError, setTaskEditError, setTaskCreateError } = appSlice.actions;
 export default appSlice.reducer;

@@ -4,7 +4,7 @@ import s from './task-label-editor.module.scss';
 import { updateTaskForTodolistThunk } from '@/store/thunks';
 import { TaskType } from '@/backend/db.types';
 import { setTaskEditError } from '@/store/app-slice';
-import { ErrorTip } from '@/components/todolist/error-tip/error-tip';
+import { TaskValidation } from '@/components/todolist/task-validation/task-validation';
 
 type TaskLabelEditorProps = {
   setEditMode: (newEditMode: boolean) => void;
@@ -16,8 +16,13 @@ type TaskLabelEditorProps = {
 };
 export const TaskLabelEditor = ({ setEditMode, setInputText, todolistId, task, inputText, label }: TaskLabelEditorProps) => {
   const dispatch = useAppDispatch();
-  const errorTipMessage = useAppSelector(state => state.app.taskEditError.errorMessage);
+  const errorTipMessage = useAppSelector(state => state.app.taskEdit_ValidationError.errorMessage);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setInputText(newValue);
+  };
 
   const resetInput = () => {
     setInputText(label);
@@ -25,7 +30,7 @@ export const TaskLabelEditor = ({ setEditMode, setInputText, todolistId, task, i
   };
 
   const updateTask = () => {
-    if (!errorTipMessage) {
+    if (!errorTipMessage && inputText.trim() !== '') {
       dispatch(updateTaskForTodolistThunk({ todolistId, updatedTask: { ...task, label: inputText } }));
       setEditMode(false);
     }
@@ -35,15 +40,6 @@ export const TaskLabelEditor = ({ setEditMode, setInputText, todolistId, task, i
       updateTask();
     } else if (e.key === 'Escape') {
       resetInput();
-    }
-  };
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    setInputText(newValue);
-    if (newValue.length > 20) {
-      dispatch(setTaskEditError({ taskId: task.id, errorMessage: 'Превышен максимальный размер (допускается не более 100 символов)' }));
-    } else {
-      dispatch(setTaskEditError({ taskId: null, errorMessage: null }));
     }
   };
 
@@ -73,7 +69,7 @@ export const TaskLabelEditor = ({ setEditMode, setInputText, todolistId, task, i
         onChange={e => handleChange(e)}
         onKeyDown={e => handleKeyDown(e)}
       />
-      {errorTipMessage && <ErrorTip message={errorTipMessage} />}
+      <TaskValidation type={'editTaskValidation'} textForValidation={inputText} taskId={task.id} />
     </div>
   );
 };

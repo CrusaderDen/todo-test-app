@@ -29,9 +29,18 @@
 
   height: 30px;
 
-  transition: transform 0.2s;
+  transition: all 0.2s;
 
   &:hover {
     transform: scale(1.2) translateY(-40%);
   }
+
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
+.errorTip {
+  top: -35px;
+  left: 35px;
 }

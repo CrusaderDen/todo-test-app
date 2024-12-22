@@ -26,6 +26,11 @@
 }
 
 
+.tipNone {
+  display: none;
+}
+
+
 @keyframes slide-up-and-fade {
   from {
     transform: translateY(2px);
